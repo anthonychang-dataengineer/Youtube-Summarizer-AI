@@ -8,8 +8,8 @@ import requests#for transcript api
 
 #set up env and api
 load_dotenv()
-api_key = os.getenv("ANTHROPIC_API_KEY")
-
+anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+transcript_api_key = os.getenv("TRANSCRIPT_API_KEY")
 app = FastAPI()
 
 class SummarizeRequest(BaseModel):
@@ -37,7 +37,8 @@ async def summarize(request: SummarizeRequest):
         #transcript = ytt_api.fetch(video_id)
         transcript_response = requests.get(
             f"https://transcriptapi.com/api/v2/youtube/transcript",
-            params={"video_url": video_id, "apiKey": "TRANSCRIPT_API_KEY"}
+            params={"video_url": video_id}, 
+            headers={"Authorization": f"Bearer {transcript_api_key}"}
         )
 
         #Print one big string
