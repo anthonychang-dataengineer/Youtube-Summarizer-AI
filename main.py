@@ -40,29 +40,7 @@ async def summarize(request: SummarizeRequest):
             params={"video_url": video_id}, 
             headers={"Authorization": f"Bearer {transcript_api_key}"}
         )
-
-        #Print one big string
-        full_text = " ".join([item.text for item in transcript_response.transcript])
+        return transcript_response
         
-        prompt = f"Summarize this Youtube video transcript in this format: "\
-                    f"TDLR at the beginning, including a 'WHY THIS MATTERS TO YOU' section, then a Listicle format highlightng import observations and key points. If it's there's a technical aspect, explain how it was done."\
-                    f"and at the bottom, the conclusion/takeaway the video ends in (don't bother with things like promotions or advertisements):"\
-                    f"\n\n{full_text}"
-        #print(prompt)
-        #Call Claude API
-        client = Anthropic()
-        message = client.messages.create(
-            model="claude-opus-4-8",
-            max_tokens=1500,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
-            ]
-        )
-
-        summary = message.content[0].text
-        return summary
     except Exception as e:
         return {"Error": str(e)}
