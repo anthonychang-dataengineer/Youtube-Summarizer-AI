@@ -57,7 +57,7 @@ async def summarize(request: SummarizeRequest):
         client = Anthropic()
         message = client.messages.create(
             model="claude-opus-4-8",
-            max_tokens=1500,
+            max_tokens=2000,
             messages=[
                 {
                     "role": "user",
