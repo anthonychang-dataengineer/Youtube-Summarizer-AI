@@ -31,16 +31,42 @@ async def summarize(request: SummarizeRequest):
         elif 'v=' in request.youtubeUrl:#this is using a desktop youtube url
             video_id = request.youtubeUrl.split('v=')[1]
         
-        
 
         #ytt_api = YouTubeTranscriptApi()
         #transcript = ytt_api.fetch(video_id)
+
         transcript_response = requests.get(
-            f"https://transcriptapi.com/api/v2/youtube/transcript",
+            "https://transcriptapi.com/api/v2/youtube/transcript",
             params={"video_url": video_id}, 
             headers={"Authorization": f"Bearer {transcript_api_key}"}
         )
-        return transcript_response
+        #Parse response to json
+        transcript_json = transcript_response.json()
+        #extract the transcript array
+        transcript_array = transcript_json['transcript']
+        print(transcript_array)
+        #Print one big string
+        full_text = " ".join([item['text'] for item in transcript_array])
         
+        prompt = f"Summarize this Youtube video transcript in this format: "\
+                    f"TDLR at the beginning, including a 'WHY THIS MATTERS TO YOU' section, then a Listicle format highlightng import observations and key points. If it's there's a technical aspect, explain how it was done."\
+                    f"and at the bottom, the conclusion/takeaway the video ends in (don't bother with things like promotions or advertisements):"\
+                    f"\n\n{full_text}"
+        #print(prompt)
+        #Call Claude API
+        client = Anthropic()
+        message = client.messages.create(
+            model="claude-opus-4-8",
+            max_tokens=1500,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ]
+        )
+
+        summary = message.content[0].text
+        return summary
     except Exception as e:
         return {"Error": str(e)}
