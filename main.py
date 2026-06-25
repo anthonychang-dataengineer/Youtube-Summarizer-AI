@@ -24,8 +24,8 @@ async def summarize(request: SummarizeRequest):
     #Fetch transcript
     try:
         #Extract video ID
-        if 'youtu.be\/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
-            video_id = request.youtubeUrl.split('youtu.be\/')[1].split('?')[0]
+        if 'youtu.be/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
+            video_id = request.youtubeUrl.split('youtu.be/')[1].split('?')[0]
         elif 'youtu.be/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
             video_id = request.youtubeUrl.split('youtu.be/')[1].split('?')[0]
         elif 'v=' in request.youtubeUrl:#this is using a desktop youtube url
@@ -44,7 +44,7 @@ async def summarize(request: SummarizeRequest):
         transcript_json = transcript_response.json()
         #extract the transcript array
         transcript_array = transcript_json['transcript']
-        print(transcript_array)
+        #print(transcript_array)
         #Print one big string
         full_text = " ".join([item['text'] for item in transcript_array])
         
