@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from youtube_transcript_api import YouTubeTranscriptApi
 from anthropic import Anthropic
+import requests#for transcript api
 
 #set up env and api
 load_dotenv()
@@ -32,11 +33,15 @@ async def summarize(request: SummarizeRequest):
         
         
 
-        ytt_api = YouTubeTranscriptApi()
-        transcript = ytt_api.fetch(video_id)
+        #ytt_api = YouTubeTranscriptApi()
+        #transcript = ytt_api.fetch(video_id)
+        transcript_response = requests.get(
+            f"https://transcriptapi.com/api/v2/youtube/transcript",
+            params={"video_url": video_id, "apiKey": "TRANSCRIPT_API_KEY"}
+        )
 
         #Print one big string
-        full_text = " ".join([subtitle_line.text for subtitle_line in transcript.snippets])
+        full_text = " ".join([item.text for item in transcript_response.transcript])
         
         prompt = f"Summarize this Youtube video transcript in this format: "\
                     f"TDLR at the beginning, including a 'WHY THIS MATTERS TO YOU' section, then a Listicle format highlightng import observations and key points. If it's there's a technical aspect, explain how it was done."\
