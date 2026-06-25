@@ -23,12 +23,14 @@ async def summarize(request: SummarizeRequest):
     #Fetch transcript
     try:
         #Extract video ID
-        if 'v=' in request.youtubeUrl:#this is using a desktop youtube url
-            video_id = request.youtubeUrl.split('v=')[1]
+        if 'youtu.be\/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
+            video_id = request.youtubeUrl.split('youtu.be\/')[1].split('?')[0]
         elif 'youtu.be/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
             video_id = request.youtubeUrl.split('youtu.be/')[1].split('?')[0]
-        elif 'youtu.be\/' in request.youtubeUrl:#this is using google chrom youtube url on iphone
-            video_id = request.youtubeUrl.split('youtu.be\/')[1].split('?')[0]
+        elif 'v=' in request.youtubeUrl:#this is using a desktop youtube url
+            video_id = request.youtubeUrl.split('v=')[1]
+        
+        
 
         ytt_api = YouTubeTranscriptApi()
         transcript = ytt_api.fetch(video_id)
