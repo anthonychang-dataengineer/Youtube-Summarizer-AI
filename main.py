@@ -48,9 +48,10 @@ async def summarize(request: SummarizeRequest):
         #Print one big string
         full_text = " ".join([item['text'] for item in transcript_array])
         
-        prompt = f"Summarize this Youtube video transcript in this format: "\
-                    f"TDLR at the beginning, including a 'WHY THIS MATTERS TO YOU' section, then a Listicle format highlightng import observations and key points. If it's there's a technical aspect, explain how it was done."\
-                    f"and at the bottom, the conclusion/takeaway the video ends in (don't bother with things like promotions or advertisements):"\
+        prompt = "Summarize this Youtube video transcript in this format: "\
+                    "Give it your best guess of the title"\
+                    "TDLR at the beginning, including a 'WHY THIS MATTERS TO YOU' section, then a Listicle format highlightng import observations and key points. If it's there's a technical aspect, explain how it was done."\
+                    "and at the bottom, the conclusion/takeaway the video ends in (don't bother with things like promotions or advertisements):"\
                     f"\n\n{full_text}"
         #print(prompt)
         #Call Claude API
